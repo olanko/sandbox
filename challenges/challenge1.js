@@ -1,6 +1,6 @@
 api = require('throttling-test');
 
-api.get('/oakorshonen')
+api.get('/oakorhonen')
     .then(function(results) {
         console.log('results:', results);
     })
