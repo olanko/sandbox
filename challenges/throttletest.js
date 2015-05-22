@@ -1,7 +1,13 @@
+//Queuing tasks
 var queue = [];
-var tasks_run = [];
-var MAXTASKS = 25;
+
+var MAXTASKS = 3;
 var TIMEWINDOW = 5 * 1000;
+
+//List of timestamps that tell when tasks were executed.
+var tasks_run = [];
+
+//Number of tasks executed in window.
 var ntasks = 0;
 
 function task(i) {
