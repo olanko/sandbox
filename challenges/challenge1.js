@@ -18,7 +18,8 @@ function o(i) {
 
 for (var i = 0; i < 10; i++) {
     console.log(i + ' started');
-    setTimeout(o, i * 3000, i);
+    //setTimeout(o, i * 3000, i);
+    makerequest(i);
 }
 
 var queue = [];
@@ -35,7 +36,8 @@ function nextreq() {
         var r = shift(queue);
         console.log(r.ts + ' ' + Date.now());
 
-        setTimeout(o, 0, r.i);
+        //setTimeout(o, 0, r.i);
+        o(r.i);
         nextreq();
     } else {
         console.log('reqs full:, wait for ' + queue[0].ts + timelimit - Date.now());
