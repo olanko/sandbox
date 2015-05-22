@@ -8,8 +8,10 @@ var TIMEWINDOW = 5 * 1000;
 var tasks_run = [];
 
 function task(i) {
-    if (tasks_run.length < MAXTASKS) {
+    if (!tasks_run.length || tasks_run.length < MAXTASKS) {
         console.log('task: ' + i + ' tasks_run.length=' + tasks_run.length + ' tasks_run:'+ tasks_run);
+
+        //Set first timeslot to be freed after TIMEWINDOW.
         if (!tasks_run.length) {
             setTimeout(free_slot, TIMEWINDOW);
         }
@@ -20,10 +22,12 @@ function task(i) {
 }
 
 function free_slot() {
+    //Free oldest slot.
     tasks_run.shift();
 
     console.log('free_slot: tasks_run.length=' + tasks_run.length);
     if (queue.length) {
+        //Run first task in queue.
         task(queue.shift());
     }
     if (tasks_run.length) {
