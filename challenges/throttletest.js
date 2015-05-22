@@ -7,17 +7,13 @@ var TIMEWINDOW = 5 * 1000;
 //List of timestamps that tell when tasks were executed.
 var tasks_run = [];
 
-//Number of tasks executed in window.
-var ntasks = 0;
-
 function task(i) {
-    if (ntasks < MAXTASKS) {
-        console.log('task: ' + i + ' ntasks=' + ntasks + ' tasks_run:'+ tasks_run);
+    if (tasks_run.length < MAXTASKS) {
+        console.log('task: ' + i + ' tasks_run.length=' + tasks_run.length + ' tasks_run:'+ tasks_run);
         if (!tasks_run.length) {
             setTimeout(free_slot, TIMEWINDOW);
         }
         tasks_run.push(Date.now());
-        ntasks++;
     } else {
         queue.push(i);
     }
@@ -25,9 +21,8 @@ function task(i) {
 
 function free_slot() {
     tasks_run.shift();
-    ntasks--;
 
-    console.log('free_slot: ntasks=' + ntasks);
+    console.log('free_slot: tasks_run.length=' + tasks_run.length);
     if (queue.length) {
         task(queue.shift());
     }
@@ -37,8 +32,8 @@ function free_slot() {
     }
 }
 
-for(var i = 0; i < 100; i++) {
-    setTimeout(task, 10 * i, i);
+for(var i = 0; i < 10; i++) {
+    setTimeout(task, 0 * i, i);
 }
 
 console.log('tasks set');
