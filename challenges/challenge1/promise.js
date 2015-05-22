@@ -1,21 +1,29 @@
-var Promise = require('bluebird');
+var Q = require('q');
+var request = require('request');
 
-// EXAMPLE 1
-// EXAMPLE 1
-// EXAMPLE 1
-// ERROR HANDLER WILL CATCH REJECTION
-function getPromise1(){
-    return new Promise(function(resolve, reject){
-        reject(new Error("Rejected error"))
-    }).then(function(result) {
-        console.log('Result 1 ' + result);
-        return result;
-    }).then(function(result) {
-          console.log('Result 2 ' + result)
-        return result;
+var endpoint = 'https://graph.facebook.com';
+var token = 'abcdfiruweferug';
+
+//var deferredTask = function (i) {
+function deferredTask(i) {
+    var deferred = Q.defer();
+
+    function run() {
+        deferred.resolve(i);
+    }
+
+    setTimeout(run, 1000 * i);
+    return deferred.promise;
+};
+
+for (i = 0; i < 10; i++) {
+    deferredTask(i)
+    .then(function(result) {
+        console.log('r' + result);
+    })
+    .fail(function(err) {
+        console.error(err);
     });
 }
-getPromise1()
-.then(function(finalResult){console.log("Final result " + finalResult)})
-.error(function(e){console.log("Error handler " + e)})
-.catch(function(e){console.log("Catch handler " + e)});
+
+console.log('jepajee');
