@@ -13,26 +13,27 @@ var express = require('express');
 var app = express();
 
 app.get('/api/stats', function(req, res){
-    console.log('serving /api/stats');
+    var sqlparams = {
+        //Little hack with named parameters so that inner query
+        //has its own date range.
+        $begindate_i: req.query['start_time'] || '2013-09-01',
+        $enddate_i: req.query['end_time'] || '2013-10-01',
+        $begindate_o: req.query['start_time'] || '2013-09-01',
+        $enddate_o: req.query['end_time'] || '2013-10-01'
+    };
+
+    //Hack to create SQL IN clause.
+    var ad_ids = [1];
+    if (req.query['ad_ids']) {
+        ad_ids = req.query['ad_ids'].split(',').map(Number);
+    }
+    sql = sqlfile.replace(/PARAM_IDS/g, ad_ids.join(', '));
+
     db.serialize(function() {
-        var sqlparams = {
-            //Little hack with named parameters so that inner query
-            //has its own date range.
-            $begindate_i: req.query['start_time'] || '2013-09-01',
-            $enddate_i: req.query['end_time'] || '2013-10-01',
-            $begindate_o: req.query['start_time'] || '2013-09-01',
-            $enddate_o: req.query['end_time'] || '2013-10-01'
-        };
-
-        //Hack to create SQL IN clause.
-        var ad_ids = req.query['ad_ids'].split(',').map(Number) || [1, 2, 3, 999];
-        sql = sqlfile.replace(/PARAM_IDS/g, ad_ids.join(', '));
-
         db.all(sql, sqlparams, function(err, rows) {
             if (err) {
                 throw err;
             };
-            console.log('query ok');
 
             var result = {};
             for (var i = 0; i < rows.length; i++) {
