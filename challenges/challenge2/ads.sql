@@ -1,5 +1,10 @@
 select s.ad_id, sum(s.impressions) as impressions,
     sum(s.clicks) as clicks, sum(s.spent) as spent,
+
+    100.0 * sum(cast(s.clicks as double)) / sum(cast(s.impressions as double)) as ctr,
+    sum(cast(s.spent as double)) / sum(cast(s.clicks as double)) as cpc,
+    sum(cast(s.spent as double)) / (sum(cast(s.impressions as double)) / 1000.0) as cpm,
+
     a.action, a.count, a.value, a.cpa
 from ad_statistics s
 inner join (select ad_id, date, action, sum(count) as count, sum(value) as value,
