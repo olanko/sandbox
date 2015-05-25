@@ -1,3 +1,5 @@
+challenge2.js
+
 REST api for getting ad statitics.
 
 GET /api/stats?ad_ids=1,2,3&start_time=2013-09-01&end_time=2013-10-01
