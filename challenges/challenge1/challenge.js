@@ -1,11 +1,20 @@
 var Q = require('q');
 var request = require('request');
 
+var fs = require('fs');
+var logfile = 'request_log.txt';
+
+function log(msg) {
+    var l = fs.createWriteStream(logfile, { flags: 'a'});
+
+    return l.write(msg + '\n');
+};
+
 //Queuing tasks
 var queue = [];
 
-var MAXTASKS = 600;
-var TIMEWINDOW = 600 * 1000;
+var MAXTASKS = 3;
+var TIMEWINDOW = 5 * 1000;
 
 //List of timestamps that tell when tasks were executed.
 var tasks_run = [];
@@ -25,11 +34,16 @@ function make_request(options) {
         });
 
         response.on('end', function () {
+            var o = JSON.parse(output);
+            if (o.error) {
+                log(output);
+                def.reject(output);
+            }
             def.resolve(output);
         });
     })
     .on('error', function(err) {
-        console.log(err);
+        log(err);
         def.reject(err);
     });
 }
